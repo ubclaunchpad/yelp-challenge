@@ -9,6 +9,7 @@ keras = "*"
 tensorflow = "*"
 tqdm = "*"
 sklearn = "*"
+pandas = "*"
 
 [dev-packages]
 
