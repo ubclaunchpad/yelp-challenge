@@ -5,8 +5,12 @@ name = "pypi"
 
 [packages]
 jupyter = "*"
+keras = "*"
+tensorflow = "*"
+tqdm = "*"
+sklearn = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.7"
+python_version = "3.6"
