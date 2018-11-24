@@ -1,4 +1,5 @@
 import os
+from collections import Counter
 
 import numpy as np
 import pandas as pd
@@ -48,20 +49,16 @@ def create_feature_matrix(res):
     restaurants that will be fed into the clustering model.
     """
     # Finds all unique restaurant categories
-    categories = {}
+    categories = Counter()
 
     for index, row in res.iterrows():
         for category in row['categories'].split(', '):
-            if categories.get(category) == None:
-                categories[category] = 1
-            else:
-                categories[category] += 1
+            categories[category] += 1
 
-    sortedCat = sorted(categories.items(), key=operator.itemgetter(1), reverse=True)
-
-    for index, cat in enumerate(sortedCat):
+    for index, cat in enumerate(categories.items()):
+        # Only save categories that contain more than 8 restaurants
         if cat[1] < 8:
-            break
+            continue
 
         res[cat[0]] = res.apply(lambda row: (1 if cat[0] in row['categories'] else 0), axis=1)
 
@@ -84,11 +81,11 @@ def create_feature_matrix(res):
     ]
 
     nonBoolAttributes = {
-                        'Alcohol': ['none', 'beer_and_wine', 'full_bar'],
-                        'RestaurantsPriceRange2':['2', '1', '3', '4'],
-                        'RestaurantsAttire': ['casual', 'dressy', 'formal'],
-                        'BusinessParking': ['garage', 'street', 'validated', 'lot', 'valet']
-                        }
+        'Alcohol': ['none', 'beer_and_wine', 'full_bar'],
+        'RestaurantsPriceRange2':['2', '1', '3', '4'],
+        'RestaurantsAttire': ['casual', 'dressy', 'formal'],
+        'BusinessParking': ['garage', 'street', 'validated', 'lot', 'valet']
+    }
 
     def addParkingColumns(row, parkingType):
         if row['attributes'] is not None and 'BusinessParking' in row['attributes'] and valType in row['attributes']['BusinessParking']:
@@ -122,15 +119,9 @@ def create_feature_matrix(res):
                                                and row['attributes'][att] == valType
                                                else 0), axis=1)
     # delete unnecessary columns
-    del res['attributes']
-    del res['categories']
-    del res['hours']
-    del res['name']
-    del res['address']
-    del res['city']
-    del res['neighborhood']
-    del res['postal_code']
-    del res['state']
+    deleteColumns = ['attributes', 'categories', 'hours', 'name', 'address', 'city', 'neighborhood', 'postal_code', 'state']
+
+    res.drop(columns=deleteColumns)
 
     return res.values
 
