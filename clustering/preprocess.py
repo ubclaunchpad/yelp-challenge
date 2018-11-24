@@ -33,7 +33,7 @@ def filter_restaurants(businesses, max_restaurants=None):
     b = b[b['categories'].str.contains(valid_categories) == True]
 
     valid_businesses = b.sort_values(by=['review_count'], ascending=False)
-    valid_businesses = valid_businesses.reset_index()
+    valid_businesses = valid_businesses.reset_index(drop=True)
 
     if max_restaurants:
         return valid_businesses[0:max_restaurants]
