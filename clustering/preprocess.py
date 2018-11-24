@@ -19,8 +19,7 @@ def filter_restaurants(businesses, max_restaurants=None):
     (determined by looking at the review data).
     """
 
-    cols = ['business_id', 'is_open', 'review_count', 'categories']
-    b = businesses[cols]
+    b = businesses
 
     review_limit = 10
     valid_categories = "Food|Restaurants"
