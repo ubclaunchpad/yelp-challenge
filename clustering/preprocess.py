@@ -3,6 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 import operator
+import json
 
 BUSINESS_DATA = "data/yelp_academic_dataset_business.json"
 CHECKIN_DATA = "data/yelp_academic_dataset_checkin.json"
@@ -138,11 +139,14 @@ def preprocess(debug=False):
     with open(BUSINESS_DATA) as f:
         businesses = pd.read_json(f, lines=True)
 
-    if debug:
-        print(businesses)
-
     restaurants = filter_restaurants(businesses, max_restaurants=10000)
+
+    if debug:
+        print(restaurants)
+
     matrix = create_feature_matrix(restaurants)
+
+    print(matrix)
 
     # Serialize preprocessed matrix to disk
     if not os.path.exists(PROCESSED_DIR):
