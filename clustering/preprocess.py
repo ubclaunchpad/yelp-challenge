@@ -20,8 +20,25 @@ def filter_restaurants(businesses, max_restaurants=None):
     (determined by looking at the review data).
     """
 
-    # TODO: filter the input DataFrame
-    return businesses
+    b = businesses
+
+    review_limit = 10
+    valid_categories = "Food|Restaurants"
+
+    # Filters the businesses to find  open businesses with review counts higher than review_limit,
+    # within categories specified in valid_categories.
+
+    b = b.loc[b['review_count'] > review_limit]
+    b = b.loc[b['is_open'] != 0]
+    b = b[b['categories'].str.contains(valid_categories) == True]
+
+    valid_businesses = b.sort_values(by=['review_count'], ascending=False)
+    valid_businesses = valid_businesses.reset_index(drop=True)
+
+    if max_restaurants:
+        return valid_businesses[0:max_restaurants]
+    else:
+        return valid_businesses
 
 
 def create_feature_matrix(res):
